@@ -1,0 +1,41 @@
+{
+  "name": "honon",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "bun --bun x next dev --turbo",
+    "build": "bun --bun x next build",
+    "start": "bun --bun x next start",
+    "lint": "bunx @biomejs/biome check .",
+    "format": "bunx @biomejs/biome check --write .",
+    "format:unsafe": "bunx @biomejs/biome check --write --unsafe .",
+    "update:all": "bun update --latest"
+  },
+  "dependencies": {
+    "@radix-ui/react-slot": "^1.1.0",
+    "babel-plugin-react-compiler": "^0.0.0-experimental-334f00b-20240725",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
+    "hono": "^4.5.5",
+    "lucide-react": "^0.427.0",
+    "next": "15.0.0-rc.0",
+    "next-auth": "^5.0.0-beta.20",
+    "next-themes": "^0.3.0",
+    "react": "19.0.0-rc-2d2cc042-20240809",
+    "react-dom": "19.0.0-rc-2d2cc042-20240809",
+    "satori": "^0.10.14",
+    "swr": "^2.2.5",
+    "tailwind-merge": "^2.5.1",
+    "tailwindcss-animate": "^1.0.7"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.8.3",
+    "@types/bun": "^1.1.6",
+    "@types/node": "^22.2.0",
+    "@types/react": "npm:types-react@rc",
+    "@types/react-dom": "npm:types-react-dom@rc",
+    "postcss": "^8.4.41",
+    "tailwindcss": "^3.4.9",
+    "typescript": "^5.5.4"
+  }
+}
