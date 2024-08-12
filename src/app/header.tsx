@@ -13,7 +13,7 @@ export const Header = () => {
           className="flex items-center justify-center gap-2"
         >
           <Image src={Logo} loading="eager" alt="service logo" height={48} />
-          <h1 className="font-black text-6xl">HonoN</h1>
+          <h1 className="font-black text-6xl">yskk</h1>
         </Link>
         <ThemeToggle />
       </div>
