@@ -3,7 +3,6 @@
 import { MoonIcon, SunIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { useTheme } from "next-themes";
 
 export function ThemeToggle() {
@@ -20,18 +19,8 @@ export function ThemeToggle() {
       size="icon"
       className="animate-fade-in"
     >
-      <SunIcon
-        size={24}
-        className={cn({
-          hidden: resolvedTheme !== "dark",
-        })}
-      />
-      <MoonIcon
-        size={24}
-        className={cn({
-          hidden: resolvedTheme === "dark",
-        })}
-      />
+      <SunIcon size={24} className={"hidden dark:block"} />
+      <MoonIcon size={24} className={"block dark:hidden"} />
     </Button>
   );
 }
