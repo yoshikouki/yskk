@@ -1,7 +1,9 @@
-export default async function HomePage() {
+import ThreeScene from "../components/three-scene";
+
+export default function HomePage() {
   return (
-    <main className="flex flex-col items-center justify-center gap-10 py-40">
-      top
+    <main>
+      <ThreeScene />
     </main>
   );
 }
