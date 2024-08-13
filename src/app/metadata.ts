@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   ],
   robots: "index, follow",
   openGraph: {
-    url: "/",
+    url: "https://yskk.com/",
     title,
     description,
     images: [
