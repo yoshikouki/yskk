@@ -4,7 +4,11 @@ import { useRef } from "react";
 
 import ThreeManager from "./three-manager";
 
-export default function ThreeScene() {
+export default function Canvaze({
+  debug = false,
+}: {
+  debug?: boolean;
+}) {
   const threeManagerRef = useRef<ThreeManager>(null);
 
   const canvasRef = (canvas: HTMLCanvasElement) => {
@@ -13,7 +17,9 @@ export default function ThreeScene() {
     }
     const threeManager = threeManagerRef.current;
     threeManager.setup();
-    threeManager.debug();
+
+    if (debug) threeManager.debug();
+
     window.addEventListener("resize", threeManager.resize);
     return () => {
       window.removeEventListener("resize", threeManager.resize);
@@ -22,5 +28,5 @@ export default function ThreeScene() {
     };
   };
 
-  return <canvas ref={canvasRef} className="h-full w-screen" />;
+  return <canvas ref={canvasRef} className="h-full w-full" />;
 }
