@@ -62,7 +62,6 @@ export default class ThreeManager {
   }
 
   private _animate = () => {
-    console.log("ThreeManager: _animate");
     this._animationId = requestAnimationFrame(this._animate);
 
     this._cameraControls.update();

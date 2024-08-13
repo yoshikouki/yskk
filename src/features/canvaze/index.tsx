@@ -42,7 +42,7 @@ export default function Canvaze({
   return (
     <ThreeManagerContext value={threeManagerRef.current}>
       <canvas ref={canvasRef} className={cn("h-full w-full", className)}>
-        {children}
+        {isMounted && children}
       </canvas>
     </ThreeManagerContext>
   );
