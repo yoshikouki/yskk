@@ -1,10 +1,17 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
+export type ThreeObject = {
+  object: THREE.Object3D;
+  animate?: () => void;
+};
+
 export default class ThreeManager {
   private _scene: THREE.Scene;
+  private _objects: ThreeObject[] = [];
+  private _renderer: THREE.WebGLRenderer;
+  private _animationId: number | null = null;
   private _camera: THREE.PerspectiveCamera;
-  private _renderer: THREE.Renderer;
   private _cameraControls: OrbitControls;
 
   constructor(canvas: HTMLCanvasElement) {
@@ -25,23 +32,29 @@ export default class ThreeManager {
         cube.object.rotation.y += 0.005;
       },
     };
-    this._scene.add(cube.object, ...objects);
-
-    const animate = () => {
-      requestAnimationFrame(animate);
-      cube.animate();
-      this._renderer.render(this._scene, this._camera);
-    };
-
-    animate();
+    this.addObject(cube);
+    this._animate();
   }
 
-  public resize() {
+  public dispose() {
+    this._scene.clear();
+    this._renderer.dispose();
+    this._cameraControls.dispose();
+    this._stopAnimation();
+    this._objects = [];
+  }
+
+  public addObject(object: ThreeObject) {
+    this._objects.push(object);
+    this._scene.add(object.object);
+  }
+
+  public resize = () => {
     const { width, height } = this._getSize();
     this._camera.aspect = width / height;
     this._camera.updateProjectionMatrix();
     this._renderer.setSize(width, height);
-  }
+  };
 
   public debug() {
     // Show axes and grid
@@ -51,6 +64,33 @@ export default class ThreeManager {
 
   private _getCanvas() {
     return this._renderer.domElement;
+  }
+
+  private _getSize(canvas = this._getCanvas()) {
+    const width = canvas.parentElement?.clientWidth ?? canvas.clientWidth;
+    const height = canvas.parentElement?.clientHeight ?? canvas.clientWidth;
+    return { width, height };
+  }
+
+  private _animate = () => {
+    this._animationId = requestAnimationFrame(this._animate);
+
+    this._cameraControls.update();
+    for (const object of this._objects) {
+      if ("animate" in object && typeof object.animate === "function") {
+        object.animate();
+      }
+    }
+
+    this._renderer.render(this._scene, this._camera);
+  };
+
+  private _stopAnimation() {
+    if (!this._animationId) {
+      return;
+    }
+    cancelAnimationFrame(this._animationId);
+    this._animationId = null;
   }
 
   private _initRenderer(canvas: HTMLCanvasElement) {
@@ -91,11 +131,5 @@ export default class ThreeManager {
     controls.enablePan = false;
     controls.enableRotate = true;
     return controls;
-  }
-
-  private _getSize(canvas = this._getCanvas()) {
-    const width = canvas.parentElement?.clientWidth ?? canvas.clientWidth;
-    const height = canvas.parentElement?.clientHeight ?? canvas.clientWidth;
-    return { width, height };
   }
 }

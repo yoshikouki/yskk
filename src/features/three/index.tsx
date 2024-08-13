@@ -17,6 +17,8 @@ export default function ThreeScene() {
     window.addEventListener("resize", threeManager.resize);
     return () => {
       window.removeEventListener("resize", threeManager.resize);
+      threeManager.dispose();
+      threeManagerRef.current = null;
     };
   };
 
