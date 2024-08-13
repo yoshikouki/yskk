@@ -5,12 +5,10 @@ export default class ThreeManager {
   private _scene: THREE.Scene;
   private _camera: THREE.PerspectiveCamera;
   private _renderer: THREE.Renderer;
-  private _canvas: HTMLCanvasElement;
   private _cameraControls: OrbitControls;
 
   constructor(canvas: HTMLCanvasElement) {
     this._renderer = this._initRenderer(canvas);
-    this._canvas = canvas;
     this._scene = this._initScene();
     this._camera = this._initCamera();
     this._cameraControls = this._initCameraControls(canvas);
