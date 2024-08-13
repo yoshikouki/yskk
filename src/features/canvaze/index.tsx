@@ -1,18 +1,25 @@
 "use client";
 
-import { useRef } from "react";
+import { createContext, useContext, useRef, useState } from "react";
 
 import { cn } from "@/lib/utils";
 import ThreeManager from "./three-manager";
 
+const ThreeManagerContext = createContext<ThreeManager | null>(null);
+
+export const useThreeManager = () => useContext(ThreeManagerContext);
+
 export default function Canvaze({
+  children,
   className,
   debug = false,
 }: {
+  children: React.ReactNode;
   debug?: boolean;
   className?: string;
 }) {
   const threeManagerRef = useRef<ThreeManager>(null);
+  const [isMounted, setIsMounted] = useState(false);
 
   const canvasRef = (canvas: HTMLCanvasElement) => {
     if (!threeManagerRef.current) {
@@ -24,6 +31,7 @@ export default function Canvaze({
     if (debug) threeManager.debug();
 
     window.addEventListener("resize", threeManager.resize);
+    setIsMounted(true);
     return () => {
       window.removeEventListener("resize", threeManager.resize);
       threeManager.dispose();
@@ -31,5 +39,11 @@ export default function Canvaze({
     };
   };
 
-  return <canvas ref={canvasRef} className={cn("h-full w-full", className)} />;
+  return (
+    <ThreeManagerContext value={threeManagerRef.current}>
+      <canvas ref={canvasRef} className={cn("h-full w-full", className)}>
+        {children}
+      </canvas>
+    </ThreeManagerContext>
+  );
 }

@@ -21,18 +21,7 @@ export default class ThreeManager {
     this._cameraControls = this._initCameraControls(canvas);
   }
 
-  public setup(...objects: THREE.Object3D[]) {
-    const cube = {
-      object: new THREE.Mesh(
-        new THREE.BoxGeometry(1, 1, 1),
-        new THREE.MeshBasicMaterial({ color: 0xff69b4 }),
-      ),
-      animate: () => {
-        cube.object.rotation.x += 0.01;
-        cube.object.rotation.y += 0.005;
-      },
-    };
-    this.addObject(cube);
+  public setup() {
     this._animate();
   }
 
@@ -73,6 +62,7 @@ export default class ThreeManager {
   }
 
   private _animate = () => {
+    console.log("ThreeManager: _animate");
     this._animationId = requestAnimationFrame(this._animate);
 
     this._cameraControls.update();
