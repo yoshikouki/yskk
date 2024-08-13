@@ -2,12 +2,15 @@
 
 import { useRef } from "react";
 
+import { cn } from "@/lib/utils";
 import ThreeManager from "./three-manager";
 
 export default function Canvaze({
+  className,
   debug = false,
 }: {
   debug?: boolean;
+  className?: string;
 }) {
   const threeManagerRef = useRef<ThreeManager>(null);
 
@@ -28,5 +31,5 @@ export default function Canvaze({
     };
   };
 
-  return <canvas ref={canvasRef} className="h-full w-full" />;
+  return <canvas ref={canvasRef} className={cn("h-full w-full", className)} />;
 }
