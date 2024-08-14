@@ -21,7 +21,7 @@ export const Timer = () => {
   }, []);
 
   return (
-    <Center scale={[1, 1, 1]} disableY>
+    <Center scale={[1, 1, 1]} position={[0, 1.5, 0]} disableY>
       <Float
         speed={0.5}
         rotationIntensity={0.5}
@@ -30,7 +30,6 @@ export const Timer = () => {
       >
         <Text3D
           font="/fonts/Inter_Regular.json"
-          position={[0, 1.5, 0]}
           height={0.2}
           lineHeight={0.6}
           bevelEnabled
@@ -39,11 +38,12 @@ export const Timer = () => {
           curveSegments={12}
         >
           {time}
-          <meshPhongMaterial
+          <meshStandardMaterial
             color={new THREE.Color(0xffffff)}
-            emissive={new THREE.Color(0x444444)}
-            specular={new THREE.Color(0xffffff)}
-            shininess={100}
+            emissive={new THREE.Color(0x888888)}
+            emissiveIntensity={0.5}
+            metalness={0.1}
+            roughness={0.2}
           />
         </Text3D>
       </Float>

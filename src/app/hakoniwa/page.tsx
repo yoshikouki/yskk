@@ -2,9 +2,11 @@ import { SnowGarden } from "./snow-garden";
 
 export default function HakoniwaPage() {
   return (
-    <main className="h-svh w-screen max-w-xl space-y-4 px-4 py-10">
-      <div className="aspect-square rounded border">
-        <SnowGarden />
+    <main className="flex w-full justify-center px-4 py-10">
+      <div className="flex w-full flex-col items-center justify-center gap-10">
+        <div className="aspect-square w-full max-w-xl rounded border">
+          <SnowGarden />
+        </div>
       </div>
     </main>
   );
