@@ -1,7 +1,5 @@
 import { url } from "@/lib/url";
-import Image from "next/image";
 import Link from "next/link";
-import Logo from "../../public/logo-no-padding.webp";
 import { ThemeToggle } from "./theme-toggle";
 
 export const Header = () => {
@@ -12,7 +10,12 @@ export const Header = () => {
           href={url.root}
           className="flex items-center justify-center gap-2"
         >
-          <Image src={Logo} loading="eager" alt="service logo" height={48} />
+          <img
+            src={"/logo-no-padding.webp"}
+            loading="eager"
+            alt="service logo"
+            width={32}
+          />
           <h1 className="font-black text-6xl">yskk</h1>
         </Link>
         <ThemeToggle />
