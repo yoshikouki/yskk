@@ -40,10 +40,11 @@ const Snowfall = () => {
     if (snowflakes.current) {
       const positions = new Float32Array(particlesCount * 3);
       for (let i = 0; i < particlesCount; i++) {
-        positions[i * 3] = (Math.random() - 0.5) * 8; // x
-        positions[i * 3 + 1] = Math.random() * 5; // y
-        positions[i * 3 + 2] = (Math.random() - 0.5) * 8; // z
-        fallSpeeds.current[i] = 0.005 + Math.random() * 0.01; // 落下速度をランダムに設定
+        const positionIndex = i * 3;
+        positions[positionIndex] = (Math.random() - 0.5) * 8; // x
+        positions[positionIndex + 1] = Math.random() * 5; // y
+        positions[positionIndex + 2] = (Math.random() - 0.5) * 8; // z
+        fallSpeeds.current[i] = 0.001 + Math.random() * 0.01;
       }
       snowflakes.current.geometry.setAttribute(
         "position",
@@ -54,16 +55,15 @@ const Snowfall = () => {
 
   useFrame(() => {
     if (snowflakes.current?.geometry.attributes.position) {
-      const positions = snowflakes.current.geometry.attributes.position
-        .array as Float32Array;
+      const positions = snowflakes.current.geometry.attributes.position.array;
       for (let i = 0; i < particlesCount; i++) {
-        const idx = i * 3;
-        positions[idx + 1] -= fallSpeeds.current[i]; // 個別の落下速度を使用
+        const positionIndex = i * 3;
+        positions[positionIndex + 1] -= fallSpeeds.current[i];
 
-        if (positions[idx + 1] < 0) {
-          positions[idx] = (Math.random() - 0.5) * 8;
-          positions[idx + 1] = 5 + Math.random() * 2;
-          positions[idx + 2] = (Math.random() - 0.5) * 8;
+        if (positions[positionIndex + 1] < 0) {
+          positions[positionIndex] = (Math.random() - 0.5) * 8; // x
+          positions[positionIndex + 1] = 5 + Math.random() * 2; // y
+          positions[positionIndex + 2] = (Math.random() - 0.5) * 8; // z
         }
       }
       snowflakes.current.geometry.attributes.position.needsUpdate = true;
