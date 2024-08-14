@@ -31,36 +31,19 @@ const PineTree = ({ position }: { position: [number, number, number] }) => {
   );
 };
 
-const Snowflake = ({ position }: { position: [number, number, number] }) => {
-  const meshRef = useRef<THREE.Mesh>(null);
-
-  useFrame((state) => {
-    if (meshRef.current) {
-      meshRef.current.rotation.y += 0.01;
-      meshRef.current.position.y =
-        position[1] + Math.sin(state.clock.elapsedTime) * 0.1;
-    }
-  });
-
-  return (
-    <mesh ref={meshRef} position={position}>
-      <octahedronGeometry args={[0.1, 0]} />
-      <meshStandardMaterial color="#ffffff" />
-    </mesh>
-  );
-};
-
 const Snowfall = () => {
   const snowflakes = useRef<THREE.Points>(null);
   const particlesCount = 1000;
+  const fallSpeeds = useRef<Float32Array>(new Float32Array(particlesCount));
 
   useEffect(() => {
     if (snowflakes.current) {
       const positions = new Float32Array(particlesCount * 3);
-      for (let i = 0; i < particlesCount * 3; i += 3) {
-        positions[i] = (Math.random() - 0.5) * 8;
-        positions[i + 1] = Math.random() * 5;
-        positions[i + 2] = (Math.random() - 0.5) * 8;
+      for (let i = 0; i < particlesCount; i++) {
+        positions[i * 3] = (Math.random() - 0.5) * 8; // x
+        positions[i * 3 + 1] = Math.random() * 5; // y
+        positions[i * 3 + 2] = (Math.random() - 0.5) * 8; // z
+        fallSpeeds.current[i] = 0.005 + Math.random() * 0.01; // 落下速度をランダムに設定
       }
       snowflakes.current.geometry.setAttribute(
         "position",
@@ -73,10 +56,14 @@ const Snowfall = () => {
     if (snowflakes.current?.geometry.attributes.position) {
       const positions = snowflakes.current.geometry.attributes.position
         .array as Float32Array;
-      for (let i = 1; i < positions.length; i += 3) {
-        positions[i] -= 0.01;
-        if (positions[i] < -0.5) {
-          positions[i] = 5;
+      for (let i = 0; i < particlesCount; i++) {
+        const idx = i * 3;
+        positions[idx + 1] -= fallSpeeds.current[i]; // 個別の落下速度を使用
+
+        if (positions[idx + 1] < 0) {
+          positions[idx] = (Math.random() - 0.5) * 8;
+          positions[idx + 1] = 5 + Math.random() * 2;
+          positions[idx + 2] = (Math.random() - 0.5) * 8;
         }
       }
       snowflakes.current.geometry.attributes.position.needsUpdate = true;
@@ -96,12 +83,9 @@ export const SnowGarden = () => {
     <HakoNiwa>
       <SnowGround />
       <Timer />
-      <PineTree position={[-2, 0, -2]} />
-      <PineTree position={[2, 0, 2]} />
-      <PineTree position={[-1.5, 0, 1.5]} />
-      <Snowflake position={[1, 2, -1]} />
-      <Snowflake position={[-1, 1.5, 1]} />
-      <Snowflake position={[0.5, 1.8, 0.5]} />
+      <PineTree position={[-2, 0.3, -2]} />
+      <PineTree position={[2, 0.3, 2]} />
+      <PineTree position={[-1.5, 0.3, 1.5]} />
       <Snowfall />
     </HakoNiwa>
   );
