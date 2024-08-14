@@ -2,13 +2,14 @@
 
 import { Bounds, Environment, OrbitControls } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { useRef } from "react";
-import type * as THREE from "three";
+import { useEffect, useRef } from "react";
+import * as THREE from "three";
+import { Timer } from "./timer";
 
 const SnowGround = () => {
   return (
-    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.5, 0]}>
-      <planeGeometry args={[10, 10]} />
+    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.49, 0]}>
+      <boxGeometry args={[8, 8, 1]} />
       <meshStandardMaterial color="#ffffff" />
     </mesh>
   );
@@ -48,21 +49,44 @@ const Snowflake = ({ position }: { position: [number, number, number] }) => {
   );
 };
 
-const IceCrystal = () => {
-  const meshRef = useRef<THREE.Mesh>(null);
+const Snowfall = () => {
+  const snowflakes = useRef<THREE.Points>(null);
+  const particlesCount = 1000;
 
-  useFrame((state) => {
-    if (meshRef.current) {
-      meshRef.current.rotation.x = Math.sin(state.clock.elapsedTime) * 0.2;
-      meshRef.current.rotation.y += 0.01;
+  useEffect(() => {
+    if (snowflakes.current) {
+      const positions = new Float32Array(particlesCount * 3);
+      for (let i = 0; i < particlesCount * 3; i += 3) {
+        positions[i] = (Math.random() - 0.5) * 8;
+        positions[i + 1] = Math.random() * 5;
+        positions[i + 2] = (Math.random() - 0.5) * 8;
+      }
+      snowflakes.current.geometry.setAttribute(
+        "position",
+        new THREE.BufferAttribute(positions, 3),
+      );
+    }
+  }, []);
+
+  useFrame(() => {
+    if (snowflakes.current?.geometry.attributes.position) {
+      const positions = snowflakes.current.geometry.attributes.position
+        .array as Float32Array;
+      for (let i = 1; i < positions.length; i += 3) {
+        positions[i] -= 0.01;
+        if (positions[i] < -0.5) {
+          positions[i] = 5;
+        }
+      }
+      snowflakes.current.geometry.attributes.position.needsUpdate = true;
     }
   });
 
   return (
-    <mesh ref={meshRef} position={[0, 0.5, 0]}>
-      <octahedronGeometry args={[0.5, 0]} />
-      <meshStandardMaterial color="#a5f3fc" transparent opacity={0.7} />
-    </mesh>
+    <points ref={snowflakes}>
+      <bufferGeometry />
+      <pointsMaterial size={0.02} color="#ffffff" />
+    </points>
   );
 };
 
@@ -73,14 +97,16 @@ export const HakoNiwa = () => {
       <pointLight position={[10, 10, 10]} intensity={1} />
       <Bounds fit clip observe margin={1}>
         <SnowGround />
-        <IceCrystal />
+        <Timer />
         <PineTree position={[-2, 0, -2]} />
         <PineTree position={[2, 0, 2]} />
         <PineTree position={[-1.5, 0, 1.5]} />
         <Snowflake position={[1, 2, -1]} />
         <Snowflake position={[-1, 1.5, 1]} />
         <Snowflake position={[0.5, 1.8, 0.5]} />
+        <Snowfall />
       </Bounds>
+
       <OrbitControls
         makeDefault
         // 視点の回転範囲
@@ -88,7 +114,7 @@ export const HakoNiwa = () => {
         minPolarAngle={Math.PI / 6}
         maxPolarAngle={Math.PI / 2}
         // ズーム
-        enableZoom={true}
+        // enableZoom={true}
         minZoom={1}
         maxZoom={2}
         enablePan={true}
