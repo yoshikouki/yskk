@@ -1,11 +1,13 @@
 {
   "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "files": {
+    "ignore": ["public/**/*"]
+  },
   "organizeImports": {
     "enabled": true
   },
   "formatter": {
-    "indentStyle": "space",
-    "ignore": []
+    "indentStyle": "space"
   },
   "linter": {
     "enabled": true,
