@@ -4,6 +4,7 @@ export const title = "yskk - Awesome App";
 export const description = "yskk is an awesome app!";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://yskk.com/"),
   title,
   description,
   keywords: [],
@@ -33,7 +34,7 @@ export const metadata: Metadata = {
   ],
   robots: "index, follow",
   openGraph: {
-    url: "https://yskk.com/",
+    url: "/",
     title,
     description,
     images: [
