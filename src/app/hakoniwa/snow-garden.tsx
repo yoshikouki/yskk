@@ -6,6 +6,7 @@ import { useEffect, useMemo, useRef } from "react";
 import { createNoise2D } from "simplex-noise";
 import * as THREE from "three";
 
+import { Center } from "@react-three/drei";
 import { Timer } from "../../features/hako-niwa/timer";
 
 const noise2D = createNoise2D();
@@ -174,9 +175,16 @@ const SnowLayer: React.FC<SnowLayerProps> = ({
   }, [width, depth, maxSnowHeight, resolution, baseHeight]);
 
   return (
-    <mesh ref={meshRef} geometry={geometry}>
-      <meshStandardMaterial color="#ffffff" side={THREE.DoubleSide} />
-    </mesh>
+    <Center scale={[1, 1, 1]} disableY>
+      <mesh ref={meshRef} geometry={geometry}>
+        <meshPhongMaterial
+          color="#ffffff"
+          specular="#aaaaaa"
+          shininess={5}
+          side={THREE.DoubleSide}
+        />
+      </mesh>
+    </Center>
   );
 };
 
@@ -253,11 +261,11 @@ export const SnowGarden = () => {
         resolution={50}
       />
       <SnowLayer
-        width={8}
-        depth={8}
+        width={7.99}
+        depth={7.99}
         maxSnowHeight={0.5}
         baseHeight={0.3}
-        resolution={50}
+        resolution={10}
       />
       <Timer />
       <PineTree position={[-2, 0.3, -2]} />

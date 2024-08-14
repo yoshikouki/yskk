@@ -5,7 +5,7 @@ import { Canvas } from "@react-three/fiber";
 
 export const HakoNiwa = ({ children }: { children: React.ReactNode }) => {
   return (
-    <Canvas camera={{ position: [0, 0, 0], fov: 50 }}>
+    <Canvas camera={{ position: [0, 5, 10], fov: 75 }} gl={{ antialias: true }}>
       <ambientLight intensity={0.5} />
       <pointLight position={[10, 10, 10]} intensity={1} />
       <Bounds fit clip observe margin={1}>
