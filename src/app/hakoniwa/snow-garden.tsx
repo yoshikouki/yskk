@@ -3,13 +3,14 @@
 import { HakoNiwa } from "@/features/hako-niwa";
 import { useFrame } from "@react-three/fiber";
 import { useEffect, useMemo, useRef } from "react";
-import { createNoise2D } from "simplex-noise";
+import { createNoise2D, createNoise3D } from "simplex-noise";
 import * as THREE from "three";
 
 import { Center } from "@react-three/drei";
 import { Timer } from "../../features/hako-niwa/timer";
 
 const noise2D = createNoise2D();
+const noise3D = createNoise3D();
 
 const GroundFloor = ({
   width,
@@ -188,21 +189,6 @@ const SnowLayer: React.FC<SnowLayerProps> = ({
   );
 };
 
-const PineTree = ({ position }: { position: [number, number, number] }) => {
-  return (
-    <group position={position}>
-      <mesh position={[0, 1.5, 0]}>
-        <coneGeometry args={[0.5, 2, 8]} />
-        <meshStandardMaterial color="#2d5d2a" />
-      </mesh>
-      <mesh position={[0, 0.5, 0]}>
-        <cylinderGeometry args={[0.1, 0.1, 1]} />
-        <meshStandardMaterial color="#4e342e" />
-      </mesh>
-    </group>
-  );
-};
-
 const Snowfall = () => {
   const snowflakes = useRef<THREE.Points>(null);
   const particlesCount = 1000;
@@ -268,9 +254,6 @@ export const SnowGarden = () => {
         resolution={10}
       />
       <Timer />
-      <PineTree position={[-2, 0.3, -2]} />
-      <PineTree position={[2, 0.3, 2]} />
-      <PineTree position={[-1.5, 0.3, 1.5]} />
       <Snowfall />
     </HakoNiwa>
   );
