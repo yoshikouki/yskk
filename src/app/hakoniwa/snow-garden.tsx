@@ -1,17 +1,98 @@
 "use client";
 
 import { HakoNiwa } from "@/features/hako-niwa";
-import {} from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
+import { createNoise2D } from "simplex-noise";
 import * as THREE from "three";
+
 import { Timer } from "../../features/hako-niwa/timer";
 
-const SnowGround = () => {
+const noise2D = createNoise2D();
+
+const GroundFloor = ({
+  width,
+  depth,
+  height,
+  thickness,
+  resolution,
+}: {
+  width: number;
+  depth: number;
+  height: number;
+  thickness: number;
+  resolution: number;
+}) => {
+  const geometry = useMemo(() => {
+    const geo = new THREE.BufferGeometry();
+    const vertices: number[] = [];
+    const indices: number[] = [];
+
+    for (let z = 0; z <= resolution; z++) {
+      for (let x = 0; x <= resolution; x++) {
+        const u = x / resolution;
+        const v = z / resolution;
+        const xPos = u * width - width / 2;
+        const zPos = v * depth - depth / 2;
+
+        // Top surface with noise
+        const noiseValue = noise2D(u * 5, v * 5) * 0.5 + 0.5;
+        const yPos = noiseValue * height + thickness;
+        vertices.push(xPos, yPos, zPos);
+
+        // Bottom surface (flat)
+        vertices.push(xPos, 0, zPos);
+
+        // Generate indices
+        if (x < resolution && z < resolution) {
+          const topLeft = 2 * (z * (resolution + 1) + x);
+          const topRight = topLeft + 2;
+          const bottomLeft = topLeft + 2 * (resolution + 1);
+          const bottomRight = bottomLeft + 2;
+
+          // Top face
+          indices.push(topLeft, topRight, bottomLeft);
+          indices.push(bottomLeft, topRight, bottomRight);
+
+          // Bottom face
+          indices.push(topLeft + 1, bottomLeft + 1, topRight + 1);
+          indices.push(topRight + 1, bottomLeft + 1, bottomRight + 1);
+
+          // Side faces
+          if (x === 0) {
+            indices.push(topLeft, bottomLeft, topLeft + 1);
+            indices.push(topLeft + 1, bottomLeft, bottomLeft + 1);
+          }
+          if (x === resolution - 1) {
+            indices.push(topRight, topRight + 1, bottomRight);
+            indices.push(topRight + 1, bottomRight + 1, bottomRight);
+          }
+          if (z === 0) {
+            indices.push(topLeft, topLeft + 1, topRight);
+            indices.push(topLeft + 1, topRight + 1, topRight);
+          }
+          if (z === resolution - 1) {
+            indices.push(bottomLeft, bottomRight, bottomLeft + 1);
+            indices.push(bottomLeft + 1, bottomRight, bottomRight + 1);
+          }
+        }
+      }
+    }
+
+    geo.setAttribute("position", new THREE.Float32BufferAttribute(vertices, 3));
+    geo.setIndex(indices);
+    geo.computeVertexNormals();
+
+    return geo;
+  }, [width, depth, height, thickness, resolution]);
+
   return (
-    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.49, 0]}>
-      <boxGeometry args={[8, 8, 1]} />
-      <meshStandardMaterial color="#ffffff" />
+    <mesh geometry={geometry}>
+      <meshStandardMaterial
+        color="#8B4513"
+        side={THREE.DoubleSide}
+        wireframe={false}
+      />
     </mesh>
   );
 };
@@ -81,7 +162,13 @@ const Snowfall = () => {
 export const SnowGarden = () => {
   return (
     <HakoNiwa>
-      <SnowGround />
+      <GroundFloor
+        width={8}
+        depth={8}
+        height={0.2}
+        thickness={0.3}
+        resolution={50}
+      />
       <Timer />
       <PineTree position={[-2, 0.3, -2]} />
       <PineTree position={[2, 0.3, 2]} />
