@@ -9,7 +9,13 @@ const getCurrentTime = () => {
   return `${hours}:${minutes}`;
 };
 
-export const Timer = () => {
+export const Timer = ({
+  position = [0, 1.5, 0],
+  scale = [1, 1, 1],
+}: {
+  position?: [number, number, number];
+  scale?: [number, number, number];
+}) => {
   const [time, setTime] = useState(getCurrentTime());
 
   // 毎秒現在時刻を更新
@@ -21,7 +27,7 @@ export const Timer = () => {
   }, []);
 
   return (
-    <Center scale={[1, 1, 1]} position={[0, 1.5, 0]} disableY>
+    <Center scale={scale} position={position} disableY>
       <Float
         speed={0.5}
         rotationIntensity={0.5}
