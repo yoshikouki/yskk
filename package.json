@@ -15,6 +15,7 @@
     "@radix-ui/react-slot": "^1.1.0",
     "@react-three/drei": "^9.109.5",
     "@react-three/fiber": "^9.0.0-alpha.8",
+    "@react-three/rapier": "^1.4.0",
     "babel-plugin-react-compiler": "^0.0.0-experimental-334f00b-20240725",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
