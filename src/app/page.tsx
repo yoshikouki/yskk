@@ -23,6 +23,9 @@ export default function HomePage() {
         <Button asChild>
           <Link href="/thousounds-particles">Thousand Sounds Particles</Link>
         </Button>
+        <Button asChild>
+          <Link href="/theatre-js">Theatre Js</Link>
+        </Button>
       </main>
       <Footer />
     </>
